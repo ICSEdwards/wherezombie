@@ -1,4 +1,4 @@
-Working <!DOCTYPE html>
+<!DOCTYPE html>
     
 <html>
   <head>
@@ -10,11 +10,10 @@ Working <!DOCTYPE html>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
     #zombie_map {
-    height: 90%;
+    height: 100%;
     width: 100%;
     left: 0;
-    position: absolute;
-    top: 10;  
+    position: absolute; 
     background-color: grey;
 }
 </style>
@@ -24,6 +23,7 @@ Working <!DOCTYPE html>
     <div id="zombie_map"> </div>
     <script>
     var zombie_map;
+    var old_position;
     var all_markers=[];
     var data = `43.668678722817894 -79.82717514038086 zombie.png
                 43.66756117926594 -79.82623100280762 hospital.png
@@ -34,21 +34,23 @@ Working <!DOCTYPE html>
     function initMap() {
 
             zombie_map = new google.maps.Map(document.getElementById("zombie_map"), {
-            zoom: 12,
-            center: {lat: 43.7315, lng: -79.7624}
+            zoom: 18,
+            center: {lat: 43.6678108, lng: -79.8265803}
               });
-            
+            		
+         	old_position = new google.maps.Marker({
+				position: {lat: 43.6678108, lng: -43.6678108},
+				map: zombie_map,
+				icon: "player.png"
+			});
+		
             if(navigator.geolocation) {
               navigator.geolocation.watchPosition(set_my_position);
               }
             else {
               alert("Geolocation doesn't work in your browser");
               }
-         	var old_position = new google.maps.Marker({
-				position: {lat: 43.7315, lng: -79.7624},
-				map: zombie_map,
-				icon: "player.png"
-			});
+
             for(var i=0; i < markers.length; i++){
                 document.write(markers[i] + "<br>");
                 var marker_data = markers[i].trim();
