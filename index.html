@@ -30,29 +30,26 @@
                 43.703498400224376 -79.82769012451172 hospital.png
                 43.66998249733081 -79.82442855834961 weapons.png`;
     var markers = data.split("\n");
+	var tolerance =10;
+	var score =0;
     console.log(markers[0]);
     function initMap() {
-
             zombie_map = new google.maps.Map(document.getElementById("zombie_map"), {
             zoom: 18,
             center: {lat: 43.6678108, lng: -79.8265803}
-              });
-            		
+              });          		
          	old_position = new google.maps.Marker({
 				position: {lat: 43.6678108, lng: -43.6678108},
 				map: zombie_map,
 				icon: "player.png"
-			});
-		
+			});		
             if(navigator.geolocation) {
               navigator.geolocation.watchPosition(set_my_position);
               }
             else {
               alert("Geolocation doesn't work in your browser");
               }
-
             for(var i=0; i < markers.length; i++){
-                document.write(markers[i] + "<br>");
                 var marker_data = markers[i].trim();
                 marker_data = marker_data.split(" ");
                 var latitude = marker_data[0];
@@ -66,9 +63,8 @@
                   });
                 all_markers.push(marker);
                 }
-
         }
-        function set_my_position(position) {
+        function set_my_position(position){
 		  old_position.setMap(null);
           var pos = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
           var loc = "player.png"
@@ -78,12 +74,27 @@
                   icon: loc
                   }); 
 		old_position = marker;
+		for (var i =0; i<all_markers.length;i++){		
+				var distance= google.maps.geometry.spherical.computeDistanceBetween(pos,all_markers[i].getPosition());
+			console.log(distance);
+			if( distance < tolerance ){
+				var what_is_it = all_markers[i].getIcon();
+				what_is_it = what_is_it.replace(".png", "");
+    			alert("Found the " + what_is_it );
+				if (what_is_it != "zombie") {
+					score+=10;
+					alert("your score is "+ score);
+				}
+				all_markers[i].setMap(null);
+				}
+			
+			}
         }
     
 
 </script>
       <script async defer
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDiiBZ_Ma6f7V_JWgxh0I0QzdB729An1bM&callback=initMap">
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDiiBZ_Ma6f7V_JWgxh0I0QzdB729An1bM&callback=initMap&&libraries=geometry">
   </script>
   </body>
 </html>
